@@ -1,0 +1,22 @@
+services:
+  api-a:
+    build: ./app
+    environment:
+      INSTANCE_NAME: "api-a"
+    expose:
+      - "5000"
+  api-b:
+    build: ./app
+    environment:
+      INSTANCE_NAME: "api-b"
+    expose:
+      - "5000"
+  load-balancer:
+    image: nginx:1.27-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api-a
+      - api-b
